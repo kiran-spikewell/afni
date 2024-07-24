@@ -81,15 +81,13 @@ jobs:
     # to build your code.
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - name: Build C/C++
+    - name: Build C/C++ using Docker
       if: matrix.language == 'c-cpp'
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        make -j $(nproc)
-      
-      working-directory: ./build
+      uses: docker/build-action@v3
+      with:
+        file: .docker/cmake_build.dockerfile  # Replace with the correct Dockerfile path
+        build-args: ${{ secrets.DOCKER_BUILD_ARGS }}  # Optional: Build arguments
+        push: false  # Don't push the image
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
