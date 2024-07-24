@@ -85,7 +85,7 @@ jobs:
       if: matrix.language == 'c-cpp'
       uses: docker/build-action@v3
       with:
-        file: .docker/cmake_build.dockerfile  # Replace with the correct Dockerfile path
+        file: afni/ .docker /cmake_build.dockerfile  # Replace with the correct Dockerfile path
         build-args: ${{ secrets.DOCKER_BUILD_ARGS }}  # Optional: Build arguments
         push: false  # Don't push the image
 
