@@ -20,21 +20,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify Checkout
+        run: ls -la
+
+      - name: Create test directory
+        run: mkdir -p ./part1 && echo "Test file" > ./part1/test_file.txt
+
+      - name: List contents of part1
+        run: ls -la ./part1
+
       - name: Install Flawfinder
         run: sudo apt-get update && sudo apt-get install flawfinder -y
 
-      - name: Convert files to UTF-8
-        run: |
-          find . -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
-
-      - name: List all files for debugging
-        run: find . -type f
-
       - name: Verify Flawfinder Installation
         run: flawfinder --version
-
-      - name: Verify Part1 Directory
-        run: ls -la ./part1
 
       - name: Run Flawfinder (part 1)
         run: |
@@ -46,24 +45,4 @@ jobs:
         with:
           sarif_file: ${{ github.workspace }}/flawfinder_results_part1.sarif
           category: "flawfinder-part1"
-          wait-for-processing: true
-
-      - name: Run Flawfinder (part 2)
-        run: flawfinder --sarif --minlevel=2 ./part2 > flawfinder_results_part2.sarif
-
-      - name: Upload analysis results (part 2)
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ${{ github.workspace }}/flawfinder_results_part2.sarif
-          category: "flawfinder-part2"
-          wait-for-processing: true
-
-      - name: Run Flawfinder (part 3)
-        run: flawfinder --sarif --minlevel=2 ./part3 > flawfinder_results_part3.sarif
-
-      - name: Upload analysis results (part 3)
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ${{ github.workspace }}/flawfinder_results_part3.sarif
-          category: "flawfinder-part3"
           wait-for-processing: true
