@@ -28,9 +28,7 @@ jobs:
         run: find . -type f
 
       - name: Run Flawfinder (part 1)
-        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
-        with:
-          arguments: '--sarif --minlevel=2 --output flawfinder_results_part1.sarif ./part1'
+        run: flawfinder --sarif --minlevel=2 ./part1 > flawfinder_results_part1.sarif
 
       - name: Upload analysis results (part 1)
         uses: github/codeql-action/upload-sarif@v3
@@ -40,9 +38,7 @@ jobs:
           wait-for-processing: true
 
       - name: Run Flawfinder (part 2)
-        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
-        with:
-          arguments: '--sarif --minlevel=2 --output flawfinder_results_part2.sarif ./part2'
+        run: flawfinder --sarif --minlevel=2 ./part2 > flawfinder_results_part2.sarif
 
       - name: Upload analysis results (part 2)
         uses: github/codeql-action/upload-sarif@v3
@@ -52,9 +48,7 @@ jobs:
           wait-for-processing: true
 
       - name: Run Flawfinder (part 3)
-        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
-        with:
-          arguments: '--sarif --minlevel=2 --output flawfinder_results_part3.sarif ./part3'
+        run: flawfinder --sarif --minlevel=2 ./part3 > flawfinder_results_part3.sarif
 
       - name: Upload analysis results (part 3)
         uses: github/codeql-action/upload-sarif@v3
