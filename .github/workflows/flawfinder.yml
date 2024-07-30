@@ -20,6 +20,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Flawfinder
+        run: sudo apt-get update && sudo apt-get install flawfinder -y
+
       - name: Convert files to UTF-8
         run: |
           find . -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
