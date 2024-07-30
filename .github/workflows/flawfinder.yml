@@ -30,8 +30,16 @@ jobs:
       - name: List all files for debugging
         run: find . -type f
 
+      - name: Verify Flawfinder Installation
+        run: flawfinder --version
+
+      - name: Verify Part1 Directory
+        run: ls -la ./part1
+
       - name: Run Flawfinder (part 1)
-        run: flawfinder --sarif --minlevel=2 ./part1 > flawfinder_results_part1.sarif
+        run: |
+          flawfinder --sarif --minlevel=2 ./part1 > flawfinder_results_part1.sarif
+          cat flawfinder_results_part1.sarif
 
       - name: Upload analysis results (part 1)
         uses: github/codeql-action/upload-sarif@v3
