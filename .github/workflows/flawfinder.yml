@@ -20,42 +20,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Convert files to UTF-8 (part1)
+      - name: Convert files to UTF-8
         run: |
-          if [ -d "./part1" ]; then
-            find ./part1 -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
-          else
-            echo "Directory ./part1 does not exist."
-          fi
+          find . -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
 
-      - name: Convert files to UTF-8 (part2)
-        run: |
-          if [ -d "./part2" ]; then
-            find ./part2 -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
-          else
-            echo "Directory ./part2 does not exist."
-          fi
-
-      - name: Run Flawfinder (part1)
+      - name: Run Flawfinder (part 1)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./part1'
+          arguments: '--sarif ./ --limit 12000'
           output: 'flawfinder_results_part1.sarif'
 
-      - name: Run Flawfinder (part2)
+      - name: Run Flawfinder (part 2)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./part2'
+          arguments: '--sarif ./ --limit 12000 --skip --quiet --after=12000'
           output: 'flawfinder_results_part2.sarif'
 
-      - name: Upload analysis results (part1)
+      - name: Upload analysis results (part 1)
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ github.workspace }}/flawfinder_results_part1.sarif
           category: "flawfinder-part1"
           wait-for-processing: true
 
-      - name: Upload analysis results (part2)
+      - name: Upload analysis results (part 2)
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ github.workspace }}/flawfinder_results_part2.sarif
