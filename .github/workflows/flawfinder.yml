@@ -33,7 +33,7 @@ jobs:
       - name: Run Flawfinder (part 2)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./ --limit 12000 --skip --quiet --after=12000'
+          arguments: '--sarif ./ --skip --quiet --after=12000 --limit 12000'
           output: 'flawfinder_results_part2.sarif'
 
       - name: Upload analysis results (part 1)
