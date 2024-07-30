@@ -27,14 +27,20 @@ jobs:
       - name: Run Flawfinder (part 1)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./ --limit 12000'
+          arguments: '--sarif ./part1 --limit 12000'
           output: 'flawfinder_results_part1.sarif'
 
       - name: Run Flawfinder (part 2)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./ --skip --quiet --after=12000 --limit 12000'
+          arguments: '--sarif ./part2 --limit 12000'
           output: 'flawfinder_results_part2.sarif'
+
+      - name: Run Flawfinder (part 3)
+        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
+        with:
+          arguments: '--sarif ./part3 --limit 12000'
+          output: 'flawfinder_results_part3.sarif'
 
       - name: Upload analysis results (part 1)
         uses: github/codeql-action/upload-sarif@v3
@@ -48,4 +54,11 @@ jobs:
         with:
           sarif_file: ${{ github.workspace }}/flawfinder_results_part2.sarif
           category: "flawfinder-part2"
+          wait-for-processing: true
+
+      - name: Upload analysis results (part 3)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ github.workspace }}/flawfinder_results_part3.sarif
+          category: "flawfinder-part3"
           wait-for-processing: true
