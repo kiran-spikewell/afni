@@ -24,23 +24,13 @@ jobs:
         run: |
           find . -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
 
+      - name: List all files for debugging
+        run: find . -type f
+
       - name: Run Flawfinder (part 1)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
-          arguments: '--sarif ./part1 --limit 12000'
-          output: 'flawfinder_results_part1.sarif'
-
-      - name: Run Flawfinder (part 2)
-        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
-        with:
-          arguments: '--sarif ./part2 --limit 12000'
-          output: 'flawfinder_results_part2.sarif'
-
-      - name: Run Flawfinder (part 3)
-        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
-        with:
-          arguments: '--sarif ./part3 --limit 12000'
-          output: 'flawfinder_results_part3.sarif'
+          arguments: '--sarif --limit 12000 --output flawfinder_results_part1.sarif ./part1'
 
       - name: Upload analysis results (part 1)
         uses: github/codeql-action/upload-sarif@v3
@@ -49,12 +39,22 @@ jobs:
           category: "flawfinder-part1"
           wait-for-processing: true
 
+      - name: Run Flawfinder (part 2)
+        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
+        with:
+          arguments: '--sarif --limit 12000 --output flawfinder_results_part2.sarif ./part2'
+
       - name: Upload analysis results (part 2)
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ github.workspace }}/flawfinder_results_part2.sarif
           category: "flawfinder-part2"
           wait-for-processing: true
+
+      - name: Run Flawfinder (part 3)
+        uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
+        with:
+          arguments: '--sarif --limit 12000 --output flawfinder_results_part3.sarif ./part3'
 
       - name: Upload analysis results (part 3)
         uses: github/codeql-action/upload-sarif@v3
