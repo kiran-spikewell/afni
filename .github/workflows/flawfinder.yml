@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: List files in part1
+      - name: Convert files to UTF-8 (part1)
         run: |
           if [ -d "./part1" ]; then
             find ./part1 -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
@@ -28,7 +28,7 @@ jobs:
             echo "Directory ./part1 does not exist."
           fi
 
-      - name: List files in part2
+      - name: Convert files to UTF-8 (part2)
         run: |
           if [ -d "./part2" ]; then
             find ./part2 -type f -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 "{}" -o "{}"' \;
@@ -36,26 +36,28 @@ jobs:
             echo "Directory ./part2 does not exist."
           fi
 
-      - name: flawfinder_scan_part1
+      - name: Run Flawfinder (part1)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
           arguments: '--sarif ./part1'
           output: 'flawfinder_results_part1.sarif'
 
-      - name: flawfinder_scan_part2
+      - name: Run Flawfinder (part2)
         uses: david-a-wheeler/flawfinder@8e4a779ad59dbfaee5da586aa9210853b701959c
         with:
           arguments: '--sarif ./part2'
           output: 'flawfinder_results_part2.sarif'
 
-      - name: Upload analysis results to GitHub Security tab
+      - name: Upload analysis results (part1)
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{github.workspace}}/flawfinder_results_part1.sarif
+          sarif_file: ${{ github.workspace }}/flawfinder_results_part1.sarif
+          category: "flawfinder-part1"
+          wait-for-processing: true
 
-      - name: Upload analysis results to GitHub Security tab
+      - name: Upload analysis results (part2)
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{github.workspace}}/flawfinder_results_part2.sarif
-
-
+          sarif_file: ${{ github.workspace }}/flawfinder_results_part2.sarif
+          category: "flawfinder-part2"
+          wait-for-processing: true
