@@ -66,10 +66,15 @@ jobs:
     - name: Clone AFNI repository
       run: git clone https://github.com/afni/afni.git
 
+    - name: List available make targets
+      run: |
+        cd afni/src
+        make help
+
     - name: Build AFNI
       run: |
         cd afni/src
-        make vastness
+        make
 
     - name: Initialize the CodeQL toolchain
       uses: github/codeql-action/init@v3
