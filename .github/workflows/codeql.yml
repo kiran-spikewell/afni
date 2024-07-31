@@ -68,6 +68,8 @@ jobs:
 
     - name: Configure AFNI with CMake
       run: |
+        export CC=$(which gcc)
+        export CXX=$(which g++)
         mkdir -p afni/build
         cd afni/build
         cmake ..
