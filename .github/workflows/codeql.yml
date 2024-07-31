@@ -47,6 +47,7 @@ jobs:
                                 r-base-dev cmake bc \
                                 libgdal-dev libopenblas-dev \
                                 libnode-dev libudunits2-dev
+        pip install setuptools
 
     - name: Download AFNI setup scripts
       run: |
@@ -73,6 +74,14 @@ jobs:
         mkdir -p afni/build
         cd afni/build
         cmake ..
+      shell: /usr/bin/bash -e {0}
+      env:
+        pythonLocation: /opt/hostedtoolcache/Python/3.12.4/x64
+        PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.4/x64/lib/pkgconfig
+        Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
+        Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
+        Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
+        LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.4/x64/lib
 
     - name: Build AFNI
       run: |
