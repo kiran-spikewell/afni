@@ -27,27 +27,10 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install dependencies
+    - name: Install minimal dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y tcsh xfonts-base libssl-dev \
-                                python-is-python3 \
-                                python3-matplotlib python3-numpy \
-                                python3-flask python3-flask-cors \
-                                python3-pil \
-                                gsl-bin netpbm gnome-tweaks \
-                                libjpeg62 xvfb xterm vim curl \
-                                gedit evince eog \
-                                libglu1-mesa-dev libglw1-mesa-dev \
-                                libxm4 build-essential \
-                                libcurl4-openssl-dev libxml2-dev \
-                                libgfortran-14-dev libgomp1 \
-                                gnome-terminal nautilus \
-                                firefox xfonts-100dpi \
-                                r-base-dev cmake bc \
-                                libgdal-dev libopenblas-dev \
-                                libnode-dev libudunits2-dev
-        pip install setuptools
+        sudo apt-get install -y tcsh cmake build-essential libssl-dev
 
     - name: Clean up disk space
       run: |
@@ -55,21 +38,7 @@ jobs:
         sudo rm -rf /opt/ghc
         sudo rm -rf /usr/local/share/boost
         sudo apt-get clean
-
-    - name: Download AFNI setup scripts
-      run: |
-        curl -O https://raw.githubusercontent.com/afni/afni/master/src/other_builds/OS_notes.linux_ubuntu_24_64_a_admin.txt
-        curl -O https://raw.githubusercontent.com/afni/afni/master/src/other_builds/OS_notes.linux_ubuntu_24_64_b_user.tcsh
-        curl -O https://raw.githubusercontent.com/afni/afni/master/src/other_builds/OS_notes.linux_ubuntu_24_64_c_nice.tcsh
-
-    - name: Run AFNI admin setup script
-      run: sudo bash OS_notes.linux_ubuntu_24_64_a_admin.txt 2>&1 | tee o.ubuntu_24_a.txt
-
-    - name: Run AFNI user setup script
-      run: tcsh OS_notes.linux_ubuntu_24_64_b_user.tcsh 2>&1 | tee o.ubuntu_24_b.txt
-
-    - name: Niceify terminal
-      run: tcsh OS_notes.linux_ubuntu_24_64_c_nice.tcsh 2>&1 | tee o.ubuntu_24_c.txt
+        sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
     - name: Clone AFNI repository
       run: git clone https://github.com/afni/afni.git
@@ -82,13 +51,6 @@ jobs:
         cd afni/build
         cmake ..
       shell: /usr/bin/bash -e {0}
-      env:
-        pythonLocation: /opt/hostedtoolcache/Python/3.12.4/x64
-        PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.4/x64/lib/pkgconfig
-        Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
-        Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
-        Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.4/x64
-        LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.4/x64/lib
 
     - name: Build AFNI
       run: |
@@ -105,6 +67,14 @@ jobs:
       env:
         CC: ${{ env.CC }}
         CXX: ${{ env.CXX }}
+
+        
+    - name: Monitor disk space
+      run: df -h
+
+    - name: Monitor workspace usage
+      run: du -sh /home/runner/work/afni/afni
+
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
