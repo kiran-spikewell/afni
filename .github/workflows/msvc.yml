@@ -36,7 +36,15 @@ jobs:
       - name: Install Zlib
         run: .\vcpkg\vcpkg install zlib
 
+      - name: Set up vcpkg environment variables
+        run: |
+          echo "VCPKG_ROOT=${{ github.workspace }}\vcpkg" >> $GITHUB_ENV
+          echo "VCPKG_DEFAULT_TRIPLET=x64-windows" >> $GITHUB_ENV
+
       - name: Configure CMake
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+          VCPKG_DEFAULT_TRIPLET: x64-windows
         run: cmake -B ${{ env.build }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake -DAFNI_COMPILER_CHECK=OFF
 
       # Build is not required unless generated source files are used
