@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ zlib1g-dev libx11-dev libmotif-dev libgl1-mesa-dev libgl1-mesa-glx libxpm-dev libxmu-dev
+          sudo apt-get install -y cmake g++ zlib1g-dev libx11-dev libmotif-dev libgl1-mesa-dev libgl1-mesa-glx libxpm-dev libxmu-dev libxi-dev
 
       - name: Configure CMake
         env:
