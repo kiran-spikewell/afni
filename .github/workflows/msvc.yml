@@ -44,7 +44,9 @@ jobs:
                                   python3-matplotlib python3-numpy \
                                   python3-flask python3-flask-cors \
                                   python3-pil \
-                                  gsl-bin netpbm gnome-tweaks \
+                                  gsl-bin libgsl-dev \
+                                  libglib2.0-dev \
+                                  netpbm gnome-tweaks \
                                   libjpeg62 xvfb xterm vim curl \
                                   gedit evince eog \
                                   libglu1-mesa-dev libglw1-mesa-dev \
