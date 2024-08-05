@@ -11,8 +11,6 @@ on:
 env:
   # Path to the CMake build directory.
   build: '${{ github.workspace }}/build'
-  CC: gcc
-  CXX: g++
 
 permissions:
   contents: read
@@ -30,8 +28,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up MSVC
-        uses: microsoft/setup-msvc@v1
+      - name: Set up MSBuild
+        uses: actions/setup-msbuild@v1
 
       - name: Configure CMake
         run: cmake -B ${{ env.build }} -DAFNI_COMPILER_CHECK=OFF
