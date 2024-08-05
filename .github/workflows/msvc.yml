@@ -28,9 +28,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up MSBuild
-        uses: actions/setup-msbuild@v1
-
       - name: Configure CMake
         run: cmake -B ${{ env.build }} -DAFNI_COMPILER_CHECK=OFF
 
@@ -59,3 +56,4 @@ jobs:
       #   with:
       #     name: sarif-file
       #     path: ${{ steps.run-analysis.outputs.sarif }}
+
