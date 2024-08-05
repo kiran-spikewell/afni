@@ -11,6 +11,8 @@ on:
 env:
   # Path to the CMake build directory.
   build: '${{ github.workspace }}/build'
+  CC: '/usr/bin/gcc'
+  CXX: '/usr/bin/g++'
 
 permissions:
   contents: read
@@ -70,7 +72,7 @@ jobs:
         run: |
           mkdir -p ${{ env.build }}
           cd ${{ env.build }}
-          cmake ../afni
+          cmake ../afni -DAFNI_COMPILER_CHECK=OFF
 
       - name: Build AFNI
         run: |
