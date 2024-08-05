@@ -6,63 +6,99 @@ on:
   pull_request:
     branches: [ "master" ]
   schedule:
-    - cron: '21 7 * * 3'
+    - cron: '17 2 * * 2'
 
 env:
   # Path to the CMake build directory.
   build: '${{ github.workspace }}/build'
-  CC: /usr/bin/gcc
-  CXX: /usr/bin/g++
 
 permissions:
   contents: read
+  security-events: write
 
 jobs:
   analyze:
     permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      contents: read
+      security-events: write
+      actions: read
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ zlib1g-dev libx11-dev libmotif-dev libgl1-mesa-dev libgl1-mesa-glx libxpm-dev libxmu-dev libxi-dev
+          sudo apt-get install -y tcsh xfonts-base libssl-dev \
+                                  python-is-python3 \
+                                  python3-matplotlib python3-numpy \
+                                  python3-flask python3-flask-cors \
+                                  python3-pil \
+                                  gsl-bin netpbm gnome-tweaks \
+                                  libjpeg62 xvfb xterm vim curl \
+                                  gedit evince eog \
+                                  libglu1-mesa-dev libglw1-mesa-dev \
+                                  libxm4 build-essential \
+                                  libcurl4-openssl-dev libxml2-dev \
+                                  libgfortran-14-dev libgomp1 \
+                                  gnome-terminal nautilus \
+                                  firefox xfonts-100dpi \
+                                  r-base-dev cmake bc \
+                                  libgdal-dev libopenblas-dev \
+                                  libnode-dev libudunits2-dev
+          pip install setuptools
+
+      - name: Clean up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo apt-get clean
+
+      - name: Clone AFNI repository
+        run: git clone https://github.com/afni/afni.git
 
       - name: Configure CMake
-        env:
-          CC: /usr/bin/gcc
-          CXX: /usr/bin/g++
-        run: cmake -B ${{ env.build }} -DAFNI_COMPILER_CHECK=OFF
+        run: |
+          mkdir -p ${{ env.build }}
+          cd ${{ env.build }}
+          cmake ../afni
 
-      # Build is not required unless generated source files are used
-      - name: Build CMake
-        run: cmake --build ${{ env.build }}
+      - name: Build AFNI
+        run: |
+          cd ${{ env.build }}
+          make
 
       - name: Initialize MSVC Code Analysis
         uses: microsoft/msvc-code-analysis-action@04825f6d9e00f87422d6bf04e1a38b1f3ed60d99
-        # Provide a unique ID to access the sarif output path
         id: run-analysis
         with:
           cmakeBuildDirectory: ${{ env.build }}
-          # Ruleset file that will determine what checks will be run
           ruleset: NativeRecommendedRules.ruleset
 
-      # Upload SARIF file to GitHub Code Scanning Alerts
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.run-analysis.outputs.sarif }}
 
-      # Upload SARIF file as an Artifact to download and view
-      # - name: Upload SARIF as an Artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: sarif-file
-      #     path: ${{ steps.run-analysis.outputs.sarif }}
+      - name: Clean up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+      - name: Monitor disk space
+        run: df -h
+
+      - name: Monitor workspace usage
+        run: du -sh /home/runner/work/afni/afni
