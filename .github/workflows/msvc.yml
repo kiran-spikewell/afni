@@ -33,8 +33,8 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
 
-      - name: Install Zlib
-        run: .\vcpkg\vcpkg install zlib
+      - name: Install Dependencies
+        run: .\vcpkg\vcpkg install zlib motif xorg
 
       - name: Set up vcpkg environment variables
         run: |
