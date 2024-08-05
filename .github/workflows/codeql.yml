@@ -2,9 +2,9 @@ name: CodeQL
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   schedule:
     - cron: '0 1 * * 3'
 
@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GH_PAT }} #check the secret name 
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -69,7 +71,7 @@ jobs:
       run: tcsh OS_notes.linux_ubuntu_24_64_c_nice.tcsh 2>&1 | tee o.ubuntu_24_c.txt
 
     - name: Clone AFNI repository
-      run: git clone https://github.com/afni/afni.git
+      run: git clone https://github.com/afni/afni.git # private repo
 
     - name: Configure AFNI with CMake
       run: |
