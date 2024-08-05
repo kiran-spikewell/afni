@@ -11,6 +11,8 @@ on:
 env:
   # Path to the CMake build directory.
   build: '${{ github.workspace }}/build'
+  CC: /usr/bin/gcc
+  CXX: /usr/bin/g++
 
 permissions:
   contents: read
@@ -34,6 +36,9 @@ jobs:
           sudo apt-get install -y cmake g++ zlib1g-dev libx11-dev libmotif-dev
 
       - name: Configure CMake
+        env:
+          CC: /usr/bin/gcc
+          CXX: /usr/bin/g++
         run: cmake -B ${{ env.build }} -DAFNI_COMPILER_CHECK=OFF
 
       # Build is not required unless generated source files are used
