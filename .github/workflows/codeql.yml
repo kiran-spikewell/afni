@@ -74,7 +74,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       run: |
-        git clone https://github.com/YOUR_PRIVATE_REPO_URL.git # private repo
+        git clone https://${{ secrets.GH_PAT }}@github.com/chla-is/appdev-afni.git afni # private repo
 
     - name: Configure AFNI with CMake
       run: |
