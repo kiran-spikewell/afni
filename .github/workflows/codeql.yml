@@ -71,7 +71,10 @@ jobs:
       run: tcsh OS_notes.linux_ubuntu_24_64_c_nice.tcsh 2>&1 | tee o.ubuntu_24_c.txt
 
     - name: Clone AFNI repository
-      run: git clone https://github.com/afni/afni.git # private repo
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      run: |
+        git clone https://github.com/YOUR_PRIVATE_REPO_URL.git # private repo
 
     - name: Configure AFNI with CMake
       run: |
