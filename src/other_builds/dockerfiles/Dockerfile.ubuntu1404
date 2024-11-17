@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:trusty-20190425
 
 ENV AFNI_VERSION master
 ENV INSTALLDIR /opt/afni
